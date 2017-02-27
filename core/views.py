@@ -20,7 +20,7 @@ def TensorFlowSettings(request):
 	tfMaxScore	 = request.POST['tfMaxScore']
 	tfMaxSteps	 = request.POST['tfMaxSteps']
 
-	tflow = TFlow.objects.get(id=2)
+	tflow = TFlow.objects.get(id=1)
 
 	if tfLabelsFile != tflow.tfLabelsFileLocation:
 		tflow.tfLabelsFileLocation = tfLabelsFile
