@@ -1,0 +1,116 @@
+{% extends "Base/Base.html" %}
+{% load static %}
+
+{% block title %}Welcome To Sms Identities{% endblock %}
+
+{% block content %}
+
+<script src="{% static 'js/jquery-file-upload/vendor/jquery.ui.widget.js' %}"></script>
+<script src="{% static 'js/jquery-file-upload/jquery.iframe-transport.js' %}"></script>
+<script src="{% static 'js/jquery-file-upload/jquery.fileupload.js' %}"></script>
+
+<script class="javascript">
+$(function () {
+
+  $(".js-upload-photos").click(function () {
+    $("#fileupload").click();
+  });
+
+  $("#fileupload").fileupload({
+    dataType: 'json',
+    done: function (e, data) {      	
+    	window.location = "/identity/create";
+    }
+  });
+
+});
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+var csrftoken = getCookie('csrftoken');
+
+function csrfSafeMethod(method) {
+	    // these HTTP methods do not require CSRF protection
+	    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+function checkThis(button) {
+	    $.ajax({
+    	beforeSend: function(xhr, settings) {
+	        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+	            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+	        }
+	    },
+    	type: "POST",
+        url: "/api/identity/fork",
+        data: { 
+        	id: "create",
+        },
+        success:function(result) {
+        	if(result.status == 'ok'){
+        		window.location = "/identities";
+        	}
+        	alert("Not enought Images");
+        	console.log(result);
+  			
+		}
+	});
+}
+</script>
+
+<style type="text/css">
+	
+	.thumb {
+    margin-bottom: 30px;
+}
+</style>
+
+<div class="container">
+	<div class="row" style="margin-top: 150px;">
+		<div class="col-md-4">First Name : {{ native.firstName }}</div>
+		<div class="col-md-4">Last Name : {{ native.lastName }}</div>
+		<div class="col-md-4">Auth Name : {{ native.nativeName}}</div>
+	</div>
+
+  	<div class="row" style="margin-top: 20px;" >
+
+		<div class="well text-muted text-center" style="padding-top: 4rem; padding-bottom: 4rem;">
+		  	<span class="glyphicon glyphicon-arrow-down" style="font-size: 4rem;"></span>
+		  	<h3>Drop All The Photos. Remember to Upload As Many Photos You Can. So The neural network understand the identity in a good way.</h3>
+		</div>
+
+		<input id="fileupload" type="file" name="imageFile" multiple
+       		style="display: none;"
+       		data-url="{% url 'identityImage' %}"
+       		data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
+  	</div>
+
+  	<div class="row">
+		<button class="btn-block xeeBtn" onclick="checkThis()" ="createIdentity" style="height: 50px;margin-top: 10px;margin-bottom: 20px; border-radius: 0px; color: white"> Create Identity</button>
+	</div>
+
+	<div class="row">
+	{% for image in imagesWithIdentity%}
+		<div class="col-lg-3 col-md-4 col-xs-6 thumb">
+                <a class="thumbnail" href="#">
+                    <img class="img-responsive"  src="/media/identities/{{native.nativeName}}/{{ image.imageFile}}" height="400" width="300">
+                </a>
+        </div>
+    {% endfor %}
+	</div>
+</div>
+
+
+{% endblock %}

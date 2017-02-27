@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+{% load bootstrap3 %}
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>{% block title %}| Xeerak {% endblock %}</title>
+
+    {% block headcontent %}
+
+    {% endblock %}
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+
+
+
+    {% load bootstrap3 %}
+
+    {% bootstrap_css %}
+
+    {% bootstrap_javascript %}
+
+    {% block headcontent_end %}
+
+    {% endblock %}
+
+  <link rel="stylesheet" href="{% static 'css/xeerak.css' %}" />
+   <style type="text/css">
+	.navbar-default {
+	    background-color: #0b3f11;
+	    border-color: #000;
+	}
+        .navbar-default .navbar-nav > li > a:hover,
+          .navbar-default .navbar-nav > li > a:focus {
+            color: white;
+            background-color: #0b3f11;
+            box-shadow: inset 0px 6px 0px #000; /* switch to a darker color on hover */
+        }
+        .navbar-default .navbar-nav > .active > a,
+          .navbar-default .navbar-nav > .active > a:hover,
+            .navbar-default .navbar-nav > .active > a:focus {
+              color: white;
+              background-color: gray;
+              box-shadow: inset 0px 6px 0px #AAA; /* switch to a lighter color for active element */
+        }
+    .xeeBtn {
+    	background-color: #0b3f11;
+    	border-radius: 0px
+
+    }
+    </style>
+
+</head>
+
+<body>
+
+  <div class="navbar navbar-default navbar-fixed-top">
+
+    <div class="container">
+
+      <div class="navbar-header">
+
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+
+          <span class="icon-bar"></span>
+
+          <span class="icon-bar"></span>
+
+          <span class="icon-bar"></span>
+
+        </button>
+        <a class="navbar-brand" href="/"><b>XEERak</b></a>
+      </div>
+
+      <div class="navbar-collapse collapse navbar-responsive-collapse">
+
+        <ul class="nav navbar-nav">
+
+          <li><a href="/identities">Identities</a></li>
+
+          <li><a href="/entries">Entries</a></li>
+
+          <li><a href="/smsIdentities"> Sms Identities</a></li>
+
+
+          <li><a href="/smsEntries">Sms Entries</a></li>
+
+
+          <li><a href="/settings">Settings</a></li>
+
+          <li><a href="/documentation">Documentation</a></li>
+
+          <li><a href="/admin/logout/">Log Out</a></li>
+
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  {% block content %} {% endblock %}
+
+
+
+</body>
+
+</html>

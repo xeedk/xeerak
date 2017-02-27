@@ -1,0 +1,41 @@
+{% extends "Base/Base.html" %}
+
+{% block title %}Welcome To Xeerak{% endblock %}
+
+{% block content %}
+<script type="text/javascript">
+function goToIdentities() {
+   window.location = "/identities";
+}
+function goToSmsIdentities() {
+   window.location = "/smsIdentities";
+}
+function goToEntries() {
+   window.location = "/entries";
+}
+function goToSettings() {
+   window.location = "/settings";
+}
+</script> 
+<div class="container" >
+  <div class="row" style="width: 300px;height: 300px;position: absolute;left: 50%;top: 50%; margin-left: -150px;margin-top: -150px;">
+	  <div class="col-md-12" style="margin-bottom: 10px;margin-top: 10px ">
+	  	<button class="btn-success btn-block" style="height:60px;background-color: #0b3f11" onclick="goToIdentities()"> Identities</button>
+	  </div>
+	  <div class="col-md-12" style="margin-bottom: 10px;margin-top: 10px">
+	  	<button class="btn-success btn-block" style="height:60px;background-color: #0b3f11" onclick="goToSmsIdentities()">Sms Identities</button>
+	  </div> 
+	  <div class="col-md-12" style="margin-bottom: 10px;margin-top: 10px">
+	  	<button class="btn-success btn-block" style="height:60px;background-color: #0b3f11" onclick="goToEntries()"> Entries</button>
+	  </div>	  
+	  <div class="col-md-12" style="margin-bottom: 10px;margin-top: 10px ">
+	  	<button class="btn-success btn-block" style="height:60px;background-color: #0b3f11" onclick="goToSettings()"> Settings</button>
+
+	  </div>
+
+	  <p>Make it One Page: like a web inside it</p>
+
+  </div>
+</div>
+{% endblock %}
+

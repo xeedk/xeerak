@@ -1,0 +1,224 @@
+{% extends "Base/Base.html" %}
+
+{% block title %}Welcome To Xeerak{% endblock %}
+
+{% block content %}
+<script type="text/javascript">
+	function getCookie(name) {
+	    var cookieValue = null;
+	    if (document.cookie && document.cookie != '') {
+	        var cookies = document.cookie.split(';');
+	        for (var i = 0; i < cookies.length; i++) {
+	            var cookie = jQuery.trim(cookies[i]);
+	            // Does this cookie string begin with the name we want?
+	            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+	                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+	                break;
+	            }
+	        }
+	    }
+	    return cookieValue;
+	}
+	
+	var csrftoken = getCookie('csrftoken');
+	
+	function csrfSafeMethod(method) {
+		    // these HTTP methods do not require CSRF protection
+		    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+	}
+	$(document).ready(function(){
+
+	  $("#saveSettings").click(function(e){
+	    e.preventDefault();
+	    $.ajax({
+		    beforeSend: function(xhr, settings) {
+		        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+		            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+		        }
+		    },
+	    	type: "POST",
+	        url: "/api/settings",
+	        data: { 
+	        	tfLabelsFile: $("#TFlowLabelsTxt").val(), 
+	        	tfGraphFile: $("#TFlowGraphPb").val(),
+	        	tfNNeckDir: $("#TFlowBNDir").val(),     	
+	        	tfModelDir: $("#TFlowMDir").val(), 
+	        	tfMaxScore: $("#TFlowMScore").val(),
+	        	tfMaxSteps: $("#TFlowMStep").val(),
+	        },
+	        success:function(result) {
+	  			console.log(result);
+	  			alert("To Train Xeerak On The Above Settings Please Click the Button Below!")
+			}});
+	  	});
+	  $("#trainXeerak").click(function(e){
+	  	document.getElementById("loader").style.display = "block";
+
+	    e.preventDefault();
+	    $.ajax({
+		    beforeSend: function(xhr, settings) {
+		        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+		            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+		        }
+		    },
+	    	type: "POST",
+	        url: "/api/training",
+	        data: { 
+	        	id :"",
+	        },
+	        success:function(result) {
+	        	document.getElementById("loader").style.display = "none";
+	  			console.log(result);
+	  			alert("To Train Xeerak On The Above Settings Please Click the Button Below!")
+			}});
+	  	});
+
+
+	});
+</script> 
+<style type="text/css">
+.loader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: 150px;
+  height: 150px;
+  margin: -75px 0 0 -75px;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+  display: none;
+
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Add animation to "page content" */
+.animate-bottom {
+  position: relative;
+  -webkit-animation-name: animatebottom;
+  -webkit-animation-duration: 1s;
+  animation-name: animatebottom;
+  animation-duration: 1s
+}
+
+@-webkit-keyframes animatebottom {
+  from { bottom:-100px; opacity:0 } 
+  to { bottom:0px; opacity:1 }
+}
+
+@keyframes animatebottom { 
+  from{ bottom:-100px; opacity:0 } 
+  to{ bottom:0; opacity:1 }
+}
+
+
+</style>
+
+<div class="container" >
+
+  	<div class="row" style="margin-top: 150px;">
+	  	<div class="panel panel-default">
+			<div class="panel-heading" style="background-color: green">
+			    <h3 class="panel-title">TensorFlow Settings </h3>
+			</div>
+			<div class="panel-body">
+			    <form class="form-horizontal">
+		        	{% csrf_token %}
+				    <div class="form-group">
+					    <label for="TFlowLabelsTxt: " class="col-sm-3 control-label">TensorFlow Output Labels File</label>
+					    <div class="col-sm-6">
+					      <input type="text" class="form-control" id="TFlowLabelsTxt" value="{{tflow.tfLabelsFileLocation}}">
+					    </div>
+
+					</div>
+				    <div class="form-group">
+					    <label for="TFlowGraphPb: " class="col-sm-3 control-label">TensorFlow output Graph file Location</label>
+					    <div class="col-sm-6">
+					      <input type="text" class="form-control" id="TFlowGraphPb" value="{{tflow.tfGraphFileLocation}}">
+					    </div>
+
+					</div>	
+				    <div class="form-group">
+					    <label for="TFlowBNDir: " class="col-sm-3 control-label">Bottleneck Directory</label>
+					    <div class="col-sm-6">
+					      <input type="text" class="form-control" id="TFlowBNDir" value="{{tflow.tfNNeckDirectory}}">
+					    </div>
+
+					</div>
+				    <div class="form-group">
+					    <label for="TFlowMDir: " class="col-sm-3 control-label">Training Model Directory</label>
+					    <div class="col-sm-6">
+					      <input type="text" class="form-control" id="TFlowMDir" value="{{tflow.tfModelDirectory}}">
+					    </div>
+
+					</div>				    
+					<div class="form-group">
+					    <label for="TFlowDDir: " class="col-sm-3 control-label">Training Data Directory</label>
+					    <div class="col-sm-6">
+					      <input type="text" class="form-control" id="TFlowDDir" value="{{tflow.tfImagesDirectory}}">
+					    </div>
+
+					</div>
+				    <div class="form-group">
+					    <label for="TFlowMScore: " class="col-sm-3 control-label">Maximum score To Identify</label>
+					    <div class="col-sm-6">
+					      <input type="text" class="form-control" id="TFlowMScore" value="{{tflow.tfMaxScore}}">
+					    </div>
+
+					</div>
+				    <div class="form-group">
+					    <label for="TFlowMStep: " class="col-sm-3 control-label">Training Maximum Steps</label>
+					    <div class="col-sm-6">
+					      <input type="text" class="form-control" id="TFlowMStep" value="{{tflow.tfMaxSteps}}">
+					    </div>
+
+					</div>
+					<div class="form-group" style="margin: 30px ">
+					    <div class="col-sm-offset-4 col-sm-6" >
+					      <button  class="btn btn-default xeeBtn" style="color: white;height: 50px" id="saveSettings">Save TensorFlow Settings</button>
+					    </div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+
+ <div class="loader" id="loader"></div>
+
+	<div class="row" style="margin-top: 20px;">
+	  	<div class="panel panel-default">
+			<div class="panel-heading" style="background-color: green">
+			    <h3 class="panel-title">Xeerak Settings </h3>
+			</div>
+			<div class="panel-body">
+			    <form class="form-horizontal">
+		        	{% csrf_token %}
+				   
+					<div class="form-group" style="margin: 30px ">
+					    <div class="col-sm-offset-3 col-sm-5" >
+					      <button  class="btn btn-block xeeBtn" style="color: white;height: 50px" id="trainXeerak">Train Xeerak</button>
+					    </div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+

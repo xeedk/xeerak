@@ -1,0 +1,11 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+
+{% block content %}
+
+<p>{% trans "Your Are Being Successfully Logged Out!" %}</p>
+
+<p><a href="{% url 'admin:index' %}">{% trans 'Log In Again?' %}</a></p>
+
+{% endblock %}

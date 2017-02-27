@@ -1,0 +1,65 @@
+{% extends "Base/Base.html" %}
+
+{% block title %}Welcome To Sms Identities{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row"  style="margin-top: 150px;">
+    <div class="col-sm-12 main" align="center">
+	    <div class="row" style="background:green; color:#000; border: solid green 4px;">
+	    	<div class="col-md-3" style="height: 40px;padding-top: 10px">From</div>
+	    	<div class="col-md-3" style="height: 40px;padding-top: 10px">Text Received</div>
+	    	<div class="col-md-3" style="height: 40px;padding-top: 10px">Status</div>
+	    	<div class="col-md-3" style="height: 40px;padding-top: 10px">Time</div>
+	    </div>
+	    {% for entry in entries%}
+		    <div class="row" style="background:#ccc; color:#000; border: solid black 1px;margin-top: 10px">
+		    	<div class="col-md-3" style="height: 40px;padding-top: 10px">{{entry.number}}</div>
+		    	<div class="col-md-3" style="height: 40px;padding-top: 10px">{{entry.sms}}</div>
+		    	<div class="col-md-3" style="height: 40px;padding-top: 10px">
+
+	    		<div class="row">
+	    			<div class="col-md-12">
+	    				{% if entry.wasSuccess%}
+	    					SuccessFull : {{entry.smsIdentity.identityNative.nativeName}}
+	    				{% else %}
+	    					{%if entry.isBlocked %}
+	    						Blocked  : {{entry.smsIdentity.identityNative.nativeName}}
+	    					{% else %}
+	    						Not Recognized
+	    					{% endif %}
+	    				{% endif %}
+	    			</div>
+	    		</div>	
+
+		    	</div>
+		    	<div class="col-md-3" style="height: 40px;padding-top: 10px">{{entry.createdAt}}</div>
+		    </div>
+	    {% endfor %}
+
+
+	    {% if entries.has_other_pages %}
+		  <ul class="pagination">
+		    {% if entries.has_previous %}
+		      <li><a href="?page={{ entries.previous_page_number }}">&laquo;</a></li>
+		    {% else %}
+		      <li class="disabled"><span>&laquo;</span></li>
+		    {% endif %}
+		    {% for i in entries.paginator.page_range %}
+		      {% if entries.number == i %}
+		        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+		      {% else %}
+		        <li><a href="?page={{ i }}">{{ i }}</a></li>
+		      {% endif %}
+		    {% endfor %}
+		    {% if entries.has_next %}
+		      <li><a href="?page={{ entries.next_page_number }}">&raquo;</a></li>
+		    {% else %}
+		      <li class="disabled"><span>&raquo;</span></li>
+		    {% endif %}
+		  </ul>
+		{% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
