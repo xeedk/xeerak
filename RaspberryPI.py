@@ -85,8 +85,7 @@ def readMessageFromArduino():
        for i in range(len(data_received_from_Arduino)):
          smsMessage += chr(data_received_from_Arduino[i])
        c=smsMessage[0]
-       if c == '7':
-          print(data_received_from_Arduino)
+
     data_received_from_Arduino =""
     tempString = ''.join(i for i in str(smsMessage) if i in valid_characters)
     processSms(tempString)
