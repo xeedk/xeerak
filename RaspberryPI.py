@@ -30,8 +30,21 @@ smsMessage =""
 
 smsNumber =""
 
-
 FLAGS = None
+    
+camera = PiCamera()
+
+time.sleep(0.1)
+
+camera.resolution = (640, 480)
+
+camera.hflip = True
+
+camera.vflip = True
+
+camera.framerate = 32
+
+rawCapture = PiRGBArray(camera, size=(640, 480))
 
 def detectFace():
     
@@ -78,7 +91,6 @@ def readMessageFromArduino():
     tempString = ''.join(i for i in str(smsMessage) if i in valid_characters)
     processSms(tempString)
     smsMessage = ""
-    print(tempString)
 
 def processSms(smsMessage):
    try:
@@ -92,18 +104,8 @@ def processSms(smsMessage):
            print("Gate Open Signal Sent to Arduino")
        
    except:
-
        pass    
 
-
-
-camera = PiCamera()
-time.sleep(0.1)
-camera.resolution = (640, 480)
-camera.hflip = True
-camera.vflip = True
-camera.framerate = 32
-rawCapture = PiRGBArray(camera, size=(640, 480))
 
 
 if __name__ == '__main__':
