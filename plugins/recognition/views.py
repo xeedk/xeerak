@@ -35,7 +35,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 
-tflow = TFlow.objects.get(id=2)
+tflow = TFlow.objects.get(id=1)
 
 
 
@@ -138,9 +138,9 @@ class RecognizerImageList(APIView):
     def tryImage(self,fileName):
         image_data = tensorflow.gfile.FastGFile("core/media/recog/"+ fileName, 'rb').read()
 
-        label_lines = [line.rstrip() for line in tensorflow.gfile.GFile("/home/ros2/test/ll.txt")]
+        label_lines = [line.rstrip() for line in tensorflow.gfile.GFile(tflow.tfLabelsFileLocation)]
 
-        with tensorflow.gfile.FastGFile("/home/ros2/test/gg.pb", 'rb') as f:
+        with tensorflow.gfile.FastGFile(tflow.tfGraphFileLocation, 'rb') as f:
 
             graph_def = tensorflow.GraphDef()
 
@@ -177,8 +177,7 @@ class RecognizerImageList(APIView):
 
                     highLabel = human_string
 
-            if(highScore > .8 ):
-                #Read from Db The Score Seted by Admin
+            if(highScore > (tflow.tfMaxScore)/100 ):
 
                 gues = createGuess(highLabel,highScore*100,imageId)
 
