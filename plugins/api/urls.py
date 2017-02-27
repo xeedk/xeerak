@@ -6,6 +6,7 @@ from plugins.recognition.views import RecognizerImageList
 from core.views import TensorFlowSettings
 
 from core.mytensor import StartTrainingXeerak
+from plugins.native.views import UpdateTimings
 
 urlpatterns = [
     url(r'^imageRecognize/$',RecognizerImageList.as_view()),
@@ -14,6 +15,7 @@ urlpatterns = [
     url(r'^native', include('plugins.native.urls')),
     url(r'^settings', TensorFlowSettings),
     url(r'^training', StartTrainingXeerak),
+    url(r'^hours', UpdateTimings),
 
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)

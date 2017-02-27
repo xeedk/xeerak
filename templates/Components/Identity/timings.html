@@ -1,0 +1,183 @@
+{% extends "Base/Base.html" %}
+
+{% block title %}Welcome To Identities{% endblock %}
+
+{% block content %}
+
+<script>	
+
+	function getCookie(name) {
+	    var cookieValue = null;
+	    if (document.cookie && document.cookie != '') {
+	        var cookies = document.cookie.split(';');
+	        for (var i = 0; i < cookies.length; i++) {
+	            var cookie = jQuery.trim(cookies[i]);
+	            // Does this cookie string begin with the name we want?
+	            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+	                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+	                break;
+	            }
+	        }
+	    }
+	    return cookieValue;
+	}
+	
+	var csrftoken = getCookie('csrftoken');
+	
+	function csrfSafeMethod(method) {
+		    // these HTTP methods do not require CSRF protection
+		    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+	}
+
+	$(document).ready(function(){
+
+	  $("#updateHours").click(function(e){
+	    e.preventDefault();
+	    $.ajax({
+		    beforeSend: function(xhr, settings) {
+		        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+		            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+		        }
+		    },
+	    	type: "POST",
+	        url: "/api/hours",
+	        data: { 
+	        	allowedFrom: $("#fromSelect").find("option:selected").text(),
+	        	allowedTill: $("#tillSelect").find("option:selected").text(),
+	        	nativeName: $("#nativeSelect").find("option:selected").text(),
+	        },
+	        success:function(result) {
+	        		  			console.log(result);
+
+	  			window.location = "/timings/";
+			}});
+	  	});
+
+	});
+</script>
+
+<div class="container">
+
+    <div class="row"  style="margin-top: 150px;">
+
+	    <div class="col-sm-2 col-md-offset-10 " align="center">
+	    
+		    <button class="btn btn-primary btn-block xeeBtn" data-toggle="modal" data-target="#myModal">
+	            Update Hours
+	        </button>
+
+		</div>
+
+	</div>
+
+  <div class="row"  style="margin-top: 10px;">
+    <div class="col-sm-12 main" align="center">
+	    <div class="row" style="background:green; color:#000; border: solid green 4px;">
+    		<div class="col-md-3" style="height: 40px;padding-top: 10px;font-size:1em">Native Name</div>
+    		<div class="col-md-3" style="height: 40px;padding-top: 10px;font-size:1em">Allowed From</div>
+    		<div class="col-md-3" style="height: 40px;padding-top: 10px;font-size:1em">Allowed Till</div>
+    		<div class="col-md-3" style="height: 40px;padding-top: 10px;font-size:1em">Status</div>
+	    </div>
+
+    	{%for hour in hours%}
+    		<div class="row" style="background:#ccc; color:#000; border: solid black 1px;margin-top: 10px">
+    			<div class="col-md-3" style="height: 40px;padding-top: 10px">{{hour.native.nativeName}} </div>
+    			<div class="col-md-3" style="height: 40px;padding-top: 10px">{{hour.startTime}}</div>
+    			<div class="col-md-3" style="height: 40px;padding-top: 10px">
+
+						{{hour.endTime}}
+    				</div>
+    			<div class="col-md-3" style="height: 40px;padding-top: 5px">
+					{% if hour.native.nativeStatus %}
+							Allowed
+					{% else %}
+							Blocked
+					{% endif %}
+						
+    			</div>
+    		</div>	
+    	{%endfor%}
+
+
+
+    	{% if hours.has_other_pages %}
+		  <ul class="pagination">
+		    {% if hours.has_previous %}
+		      <li><a href="?page={{ hours.previous_page_number }}">&laquo;</a></li>
+		    {% else %}
+		      <li class="disabled"><span>&laquo;</span></li>
+		    {% endif %}
+		    {% for i in hours.paginator.page_range %}
+		      {% if hours.number == i %}
+		        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+		      {% else %}
+		        <li><a href="?page={{ i }}">{{ i }}</a></li>
+		      {% endif %}
+		    {% endfor %}
+		    {% if hours.has_next %}
+		      <li><a href="?page={{ hours.next_page_number }}">&raquo;</a></li>
+		    {% else %}
+		      <li class="disabled"><span>&raquo;</span></li>
+		    {% endif %}
+		  </ul>
+		{% endif %}
+    </div>
+
+  </div>
+
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    	<div class="modal-content">
+		        <div class="modal-header">
+		        	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		        	<h4 class="modal-title" id="myModalLabel">Update Hours</h4>
+		        </div>
+		        <div class="modal-body">
+		        	<form class="form-horizontal">
+		        	{% csrf_token %}
+					    <div class="form-group">
+						    <label for="allowedFrom: " class="col-sm-4 control-label">Allowed From</label>
+						    <div class="col-sm-8">
+						     	<select class="selectpicker" data-live-search="true" id="fromSelect">
+								{% for i in range %}
+								  <option >{{i}}</option>
+								 {% endfor %}
+								</select>
+						    </div>
+						</div>
+					    <div class="form-group">
+						    <label for="allowedTill: " class="col-sm-4 control-label">Allowed Till</label>
+						    <div class="col-sm-8">
+						      	<select class="selectpicker" data-live-search="true" id="tillSelect">
+								{% for i in range %}
+								  <option >{{i}}</option>
+								 {% endfor %}
+								</select>
+						    </div>
+						</div>
+						<div class="form-group">
+						    <label for="IdentityName: " class="col-sm-4 control-label">Native Identity</label>
+						    <div class="col-sm-8">						      
+								<select class="selectpicker" data-live-search="true" id="nativeSelect">
+								{% for native in natives%}
+								  <option>{{native.nativeName}}</option>
+								 {% endfor %}
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+						    <div class="col-sm-offset-6 col-sm-6">
+						      <button  class="btn btn-default" id="updateHours">Update</button>
+						    </div>
+						</div>
+					</form>
+		        </div>
+		    
+	    	</div>
+	  </div>
+  </div>
+</div>
+
+
+
+{% endblock %}

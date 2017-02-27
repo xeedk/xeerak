@@ -25,7 +25,7 @@ SECRET_KEY = 'cy(&wmwh%21)wp11u8qhx2+fhx4358p(#*k53o_-q)5a$6pi-q'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.74']
+ALLOWED_HOSTS = ['192.168.1.72']
 
 ADMIN_LOGIN_REDIRECT_URL = '/'
 

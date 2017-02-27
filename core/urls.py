@@ -21,6 +21,8 @@ from django.conf.urls.static import static
 
 from plugins.identity.views import smsIdentities
 from plugins.identity.views import Identities
+from plugins.native.views import SetTimingsPage
+
 from plugins.recognition.views import ListEntries
 from plugins.recognition.views import SettingsPage
 from plugins.recognition.views import DocumentationPage
@@ -39,6 +41,7 @@ urlpatterns = [
     url(r'^identities/',Identities),
     url(r'^smsIdentities/',smsIdentities),
     url(r'^settings', SettingsPage),
+    url(r'^timings', SetTimingsPage),
     url(r'^documentation', DocumentationPage),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

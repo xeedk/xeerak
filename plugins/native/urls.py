@@ -6,6 +6,6 @@ from django.conf.urls.static import static
 from plugins.native.views import NativeAPI
 
 urlpatterns = [
-    url(r'^', NativeAPI.as_view()),
+    url(r'^$', NativeAPI.as_view()),
 
 ]
