@@ -275,22 +275,21 @@ class RecognizerImageList(APIView):
     	return False
 
 
-
     def isHoursOk(self,nativeNameLabel):
 
         try:
 
             native = Native.objects.get(nativeName=nativeNameLabel)
 
-            hours = Hours.objects.get(native=native)
+            hours = Hours.objects.get(native_id=native.id)
 
-            currHour = time.strftime("%H").split(',')
+            currHour = time.strftime("%H").split(',')[0]
 
             nativeAllowedHour = int(hours.startTime.split(":")[0])
 
-            nativeForbidHour = int(hours.startTime.split(":")[0])
+            nativeForbidHour = int(hours.endTime.split(":")[0])
 
-            if currHour >= hours.nativeAllowedHour and currHour < nativeForbidHour:
+            if int(currHour) >= nativeAllowedHour and int(currHour) < nativeForbidHour:
 
                 return True
 
@@ -298,8 +297,7 @@ class RecognizerImageList(APIView):
 
             pass
 
-
-        return False
+            return False
 
 class SmsRecognizerList(APIView):
 
