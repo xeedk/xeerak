@@ -1,2 +1,2 @@
 # xeerak
-Arificial Intelligent Door
+Artificial Intelligent Door
